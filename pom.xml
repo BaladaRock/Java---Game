@@ -49,7 +49,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <mainClass>org.example.Main</mainClass>
+                    <mainClass>Main</mainClass>
                     <arguments>
                         <argument>--module-path</argument>
                         <argument>${project.basedir}/openjfx-sdk-21.0.4/lib</argument>
