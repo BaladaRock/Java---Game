@@ -7,7 +7,7 @@ public class ChessGameModel {
         _boardSize = boardSize;
     }
 
-    public void InitializeChessBoard() {
+    public void initializeChessBoard() {
 
     }
 }
