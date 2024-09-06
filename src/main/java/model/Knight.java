@@ -8,7 +8,7 @@ public class Knight extends ChessPiece {
     }
 
     @Override
-    public Iterable<Iterable<Position>> getAvailableMoves(int rowIndex, int colIndex) {
+    public Iterable<Iterable<Position>> getAvailableMoves(int rowIndex, int colIndex, int size) {
         this.rowStartingPosition = rowIndex;
         this.columnStartingPosition = colIndex;
 

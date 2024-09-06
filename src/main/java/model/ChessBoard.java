@@ -33,7 +33,7 @@ public class ChessBoard {
     }
 
     public Iterable<Iterable<Position>> getAvailablePositions(ChessPiece pieceToMove, int rowIndex, int columnIndex) {
-        Iterable<Iterable<Position>> rawMoves = pieceToMove.getAvailableMoves(rowIndex, columnIndex);
+        Iterable<Iterable<Position>> rawMoves = pieceToMove.getAvailableMoves(rowIndex, columnIndex, size);
 
         return StreamSupport.stream(rawMoves.spliterator(), false)
                 .map(this::filterValidPositions)

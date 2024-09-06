@@ -31,26 +31,26 @@ public class ChessGameController {
         int size = _chessBoardView.getBoardSize();
 
         for (int col = 0; col < size; col++) {
-//            placements.add(new PiecePlacement(new Pawn("White Pawn", Color.white), size - 2, col));
-//            placements.add(new PiecePlacement(new Pawn("Black Pawn", Color.black), size - 7, col));
+            placements.add(new PiecePlacement(new Pawn("White Pawn", Color.white), size - 2, col));
+            placements.add(new PiecePlacement(new Pawn("Black Pawn", Color.black), size - 7, col));
         }
 
-//        placements.add(new PiecePlacement(new Rook("White Rook", Color.white), size - 1, 0));
-//        placements.add(new PiecePlacement(new Rook("White Rook", Color.white), size - 1, size - 1));
+        placements.add(new PiecePlacement(new Rook("White Rook", Color.white), size - 1, 0));
+        placements.add(new PiecePlacement(new Rook("White Rook", Color.white), size - 1, size - 1));
         placements.add(new PiecePlacement(new Knight("White Knight", Color.white), size - 1, 1));
         placements.add(new PiecePlacement(new Knight("White Knight", Color.white), size - 1, size - 2));
-//        placements.add(new PiecePlacement(new Bishop("White Bishop", Color.white), size - 1, 2));
-//        placements.add(new PiecePlacement(new Bishop("White Bishop", Color.white), size - 1, size - 3));
-//        placements.add(new PiecePlacement(new Queen("White Queen", Color.white), size - 1, 3));
+        placements.add(new PiecePlacement(new Bishop("White Bishop", Color.white), size - 1, 2));
+        placements.add(new PiecePlacement(new Bishop("White Bishop", Color.white), size - 1, size - 3));
+        placements.add(new PiecePlacement(new Queen("White Queen", Color.white), size - 1, 3));
         placements.add(new PiecePlacement(new King("White King", Color.white), size - 1, 4));
 
-//        placements.add(new PiecePlacement(new Rook("Black Rook", Color.black), size - 8, 0));
-//        placements.add(new PiecePlacement(new Rook("Black Rook", Color.black), size - 8, size - 1));
+        placements.add(new PiecePlacement(new Rook("Black Rook", Color.black), size - 8, 0));
+        placements.add(new PiecePlacement(new Rook("Black Rook", Color.black), size - 8, size - 1));
         placements.add(new PiecePlacement(new Knight("Black Knight", Color.black), size - 8, 1));
         placements.add(new PiecePlacement(new Knight("Black Knight", Color.black), size - 8, size - 2));
-//        placements.add(new PiecePlacement(new Bishop("Black Bishop", Color.black), size - 8, 2));
-//        placements.add(new PiecePlacement(new Bishop("Black Bishop", Color.black), size - 8, size - 3));
-//        placements.add(new PiecePlacement(new Queen("Black Queen", Color.black), size - 8, 3));
+        placements.add(new PiecePlacement(new Bishop("Black Bishop", Color.black), size - 8, 2));
+        placements.add(new PiecePlacement(new Bishop("Black Bishop", Color.black), size - 8, size - 3));
+        placements.add(new PiecePlacement(new Queen("Black Queen", Color.black), size - 8, 3));
         placements.add(new PiecePlacement(new King("Black King", Color.black), size - 8, 4));
 
         return placements;

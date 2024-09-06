@@ -20,5 +20,5 @@ public abstract class ChessPiece {
     }
 
     // Abstract methods for movement rules, to be implemented by subclasses
-    public abstract Iterable<Iterable<Position>> getAvailableMoves(int rowIndex, int colIndex);
+    public abstract Iterable<Iterable<Position>> getAvailableMoves(int rowIndex, int colIndex, int size);
 }
