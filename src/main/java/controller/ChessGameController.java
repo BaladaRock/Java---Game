@@ -42,7 +42,7 @@ public class ChessGameController {
 //        placements.add(new PiecePlacement(new Bishop("White Bishop", Color.white), size - 1, 2));
 //        placements.add(new PiecePlacement(new Bishop("White Bishop", Color.white), size - 1, size - 3));
 //        placements.add(new PiecePlacement(new Queen("White Queen", Color.white), size - 1, 3));
-//        placements.add(new PiecePlacement(new King("White King", Color.white), size - 1, 4));
+        placements.add(new PiecePlacement(new King("White King", Color.white), size - 1, 4));
 
 //        placements.add(new PiecePlacement(new Rook("Black Rook", Color.black), size - 8, 0));
 //        placements.add(new PiecePlacement(new Rook("Black Rook", Color.black), size - 8, size - 1));
@@ -51,7 +51,7 @@ public class ChessGameController {
 //        placements.add(new PiecePlacement(new Bishop("Black Bishop", Color.black), size - 8, 2));
 //        placements.add(new PiecePlacement(new Bishop("Black Bishop", Color.black), size - 8, size - 3));
 //        placements.add(new PiecePlacement(new Queen("Black Queen", Color.black), size - 8, 3));
-//        placements.add(new PiecePlacement(new King("Black King", Color.black), size - 8, 4));
+        placements.add(new PiecePlacement(new King("Black King", Color.black), size - 8, 4));
 
         return placements;
     }
