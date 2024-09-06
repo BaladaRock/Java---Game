@@ -75,4 +75,14 @@ public class ChessGameView extends GridPane {
     public SquareView getSquare(int row, int col) {
         return squares[row][col];
     }
+
+    public int getBoardSize() {
+        return SIZE;
+    }
+
+    public void performMoveEffect(int oldX, int oldY, int newX, int newY) {
+        String piece = squares[oldX][oldY].getPiece();
+        squares[newX][newY].setPiece(piece);
+        squares[oldX][oldY].setPiece(null);
+    }
 }

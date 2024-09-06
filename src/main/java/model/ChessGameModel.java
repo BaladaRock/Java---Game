@@ -1,7 +1,9 @@
 package model;
 
+import java.util.List;
+
 public class ChessGameModel {
-    private int _boardSize;
+    private final int _boardSize;
     private ChessBoard _chessBoard;
     private ChessSquare _lastClickedSquare;
     private ChessPlayer _firstPlayer;
@@ -20,15 +22,20 @@ public class ChessGameModel {
         this._secondPlayer = new ChessPlayer(Color.white);
     }
 
-    public void initializePieces() {
-        this._chessBoard.initializePieces();
+    public void setInitialPieces(List<PiecePlacement> piecePlacements) {
+        for (PiecePlacement placement : piecePlacements) {
+            ChessPiece piece = placement.piece();
+            int row = placement.row();
+            int col = placement.column();
+            _chessBoard.getSquare(row, col).set_piece(piece);
+        }
     }
 
-    public ChessSquare getLastClickedSquare() {
+    public ChessSquare getPreviouslyClickedSquare() {
         return this._lastClickedSquare;
     }
 
-    public void setLastClickedSquare(int row, int column)
+    public void setPreviouslyClickedSquare(int row, int column)
     {
         _lastClickedSquare = _chessBoard.getSquare(row, column);
     }
@@ -40,8 +47,8 @@ public class ChessGameModel {
     public void applyMove(ChessPiece pieceToMove, int row, int column) {
         _chessBoard.setPiece(_chessBoard.getSquare(row, column), pieceToMove);
         _chessBoard.setPiece(_chessBoard.getSquare(
-                _lastClickedSquare.getRow(),
-                _lastClickedSquare.getCol()
+                _lastClickedSquare.get_row(),
+                _lastClickedSquare.get_col()
         ), null);
     }
 

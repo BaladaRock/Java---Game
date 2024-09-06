@@ -50,7 +50,7 @@ public class SquareView extends StackPane {
     }
 
     private void updatePieceImage() {
-        if (!piece.isEmpty()) {
+        if (piece != null && !piece.isEmpty()) {
             String imagePath = "/chess_images/" + piece + ".png";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             imageView.setImage(image);
