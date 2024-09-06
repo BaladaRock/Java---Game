@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChessGameModel {
@@ -52,7 +53,40 @@ public class ChessGameModel {
         ), null);
     }
 
-    public boolean canApplyMove(ChessPiece pieceToMove, int row, int column) {
-        return true;
+    public boolean canApplyMove(
+            ChessPiece pieceToMove,
+            int startRow,
+            int startCol,
+            int targetRow,
+            int targetCol
+    ) {
+        var availablePositions = _chessBoard.getAvailablePositions(pieceToMove, startRow, startCol);
+        for (Iterable<Position> direction : availablePositions) {
+            List<Position> validMovesInDirection = new ArrayList<>();
+            for (Position pos : direction) {
+                var square = _chessBoard.getSquare(pos.x(), pos.y());
+                var pieceOnSquare = square.get_piece();
+
+                // Same piece color is found
+                if (pieceOnSquare != null && pieceOnSquare.getColor() == pieceToMove.getColor()) {
+                    break;
+                }
+
+                validMovesInDirection.add(pos);
+
+                // Enemy piece is found
+                if (pieceOnSquare != null && pieceOnSquare.getColor() != pieceToMove.getColor()) {
+                    break;
+                }
+            }
+
+            for (Position validPos : validMovesInDirection) {
+                if (validPos.x() == targetRow && validPos.y() == targetCol) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

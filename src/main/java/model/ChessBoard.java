@@ -1,6 +1,8 @@
 package model;
 
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class ChessBoard {
 
@@ -28,5 +30,24 @@ public class ChessBoard {
 
     public void setPiece(ChessSquare square, ChessPiece pieceToMove) {
         square.set_piece(pieceToMove);
+    }
+
+    public Iterable<Iterable<Position>> getAvailablePositions(ChessPiece pieceToMove, int rowIndex, int columnIndex) {
+        Iterable<Iterable<Position>> rawMoves = pieceToMove.getAvailableMoves(rowIndex, columnIndex);
+
+        return StreamSupport.stream(rawMoves.spliterator(), false)
+                .map(this::filterValidPositions)
+                .collect(Collectors.toList());
+    }
+
+    private Iterable<Position> filterValidPositions(Iterable<Position> positions) {
+        return StreamSupport.stream(positions.spliterator(), false)
+                .filter(this::isValidPosition)
+                .collect(Collectors.toList());
+    }
+
+    private boolean isValidPosition(Position position) {
+        return position.x() >= 0 && position.x() < size &&
+                position.y() >= 0 && position.y() < size;
     }
 }

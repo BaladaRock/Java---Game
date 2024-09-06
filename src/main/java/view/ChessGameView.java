@@ -81,7 +81,7 @@ public class ChessGameView extends GridPane {
     }
 
     public void performMoveEffect(int oldX, int oldY, int newX, int newY) {
-        String piece = squares[oldX][oldY].getPiece();
+        var piece = squares[oldX][oldY].getPiece();
         squares[newX][newY].setPiece(piece);
         squares[oldX][oldY].setPiece(null);
     }

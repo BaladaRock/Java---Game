@@ -57,21 +57,23 @@ public class ChessGameController {
     }
 
     public void handleSquareClick(int row, int column) {
-        SquareView square = _chessBoardView.getSquare(row, column);
-        String piece = square.getPiece();
+        var square = _chessBoardView.getSquare(row, column);
+        var piece = square.getPiece();
 
         // Test the connection with the view via the click event
         System.out.println("Controller: Square clicked at: (" + row + ", " + column + ") with piece: " + piece);
 
-        ChessSquare lastClicked = _chessGameModel.getPreviouslyClickedSquare();
+        var lastClicked = _chessGameModel.getPreviouslyClickedSquare();
         if(lastClicked == null) {
             _chessGameModel.setPreviouslyClickedSquare(row, column);
             return;
         }
 
-        ChessPiece pieceToMove = lastClicked.get_piece();
+        var pieceToMove = lastClicked.get_piece();
 
-        if (pieceToMove != null && _chessGameModel.canApplyMove(pieceToMove, row, column)){
+        if (pieceToMove != null &&
+                _chessGameModel.canApplyMove(pieceToMove, lastClicked.get_row(), lastClicked.get_col(), row, column)
+        ){
             _moveWasPerformed = true;
             _chessGameModel.applyMove(pieceToMove, row, column);
 

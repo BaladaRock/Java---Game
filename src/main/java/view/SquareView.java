@@ -20,7 +20,7 @@ public class SquareView extends StackPane {
         this.piece = "";
         this.imageView = new ImageView();
 
-        Rectangle background = new Rectangle(tileSize, tileSize);
+        var background = new Rectangle(tileSize, tileSize);
         background.setFill((row + col) % 2 == 0 ? Color.CHOCOLATE : Color.BROWN);
 
         getChildren().addAll(background, imageView);

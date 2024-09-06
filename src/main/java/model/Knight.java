@@ -13,63 +13,20 @@ public class Knight extends ChessPiece {
         this.columnStartingPosition = colIndex;
 
         return List.of(
-                getLMovementUpperLeftHorizontally(),
-                getLMovementUpperLeftVertically(),
-                getLMovementUpperRightHorizontally(),
-                getLMovementUpperRightVertically(),
-                getLMovementLowerLeftHorizontally(),
-                getLMovementLowerLeftVertically(),
-                getLMovementLowerRightHorizontally(),
-                getLMovementLowerRightVertically()
+                generateMove(rowStartingPosition + 2, columnStartingPosition + 1),
+                generateMove(rowStartingPosition + 2, columnStartingPosition - 1),
+                generateMove(rowStartingPosition - 2, columnStartingPosition + 1),
+                generateMove(rowStartingPosition - 2, columnStartingPosition - 1),
+                generateMove(rowStartingPosition + 1, columnStartingPosition + 2),
+                generateMove(rowStartingPosition + 1, columnStartingPosition - 2),
+                generateMove(rowStartingPosition - 1, columnStartingPosition + 2),
+                generateMove(rowStartingPosition - 1, columnStartingPosition - 2)
         );
 
     }
 
-    private Iterable<Position> getLMovementLowerRightVertically() {
-        return List.of(
-            new Position(rowStartingPosition + 2, columnStartingPosition + 1)
-        );
-    }
-
-    private Iterable<Position> getLMovementLowerRightHorizontally() {
-        return List.of(
-                new Position(rowStartingPosition + 1, columnStartingPosition + 2)
-        );
-    }
-
-    private Iterable<Position> getLMovementLowerLeftVertically() {
-        return List.of(
-                new Position(rowStartingPosition + 2, columnStartingPosition - 1)
-        );
-    }
-
-    private Iterable<Position> getLMovementLowerLeftHorizontally() {
-        return List.of(
-                new Position(rowStartingPosition + 1, columnStartingPosition - 2)
-        );
-    }
-
-    private Iterable<Position> getLMovementUpperRightVertically() {
-        return List.of(
-                new Position(rowStartingPosition - 2, columnStartingPosition + 1)
-        );
-    }
-
-    private Iterable<Position> getLMovementUpperRightHorizontally() {
-        return List.of(
-                new Position(rowStartingPosition - 1, columnStartingPosition + 2)
-        );
-    }
-
-    private Iterable<Position> getLMovementUpperLeftVertically() {
-        return List.of(
-                new Position(rowStartingPosition - 1, columnStartingPosition - 2)
-        );
-    }
-
-    private Iterable<Position> getLMovementUpperLeftHorizontally() {
-        return List.of(
-                new Position(rowStartingPosition - 2, columnStartingPosition - 1)
-        );
+    private Iterable<Position> generateMove(int row, int col) {
+        System.out.println("Raw move for knight: (" + row + ", " + col + " )");
+        return List.of(new Position(row, col));
     }
 }
