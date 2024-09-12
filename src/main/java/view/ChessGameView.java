@@ -85,4 +85,22 @@ public class ChessGameView extends GridPane {
         squares[newX][newY].setPiece(piece);
         squares[oldX][oldY].setPiece(null);
     }
+
+    public void highlightPossibleMoves(Iterable<int[]> possibleMovesCoordinates) {
+        for (int[] coordinates : possibleMovesCoordinates) {
+            int row = coordinates[0];
+            int col = coordinates[1];
+
+            squares[row][col].highlightSquare();
+        }
+    }
+
+    public void resetHighlightedSquares(Iterable<int[]> availableMoves) {
+        for (int[] coordinates : availableMoves) {
+            int row = coordinates[0];
+            int col = coordinates[1];
+
+            squares[row][col].resetHighlightedSquare();
+        }
+    }
 }

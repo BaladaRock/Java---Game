@@ -11,6 +11,8 @@ import java.util.Objects;
 public class SquareView extends StackPane {
     private final int row;
     private final int col;
+    private final Rectangle backgroundSquare;
+    private final Color initialColor;
     private String piece;
     private final ImageView imageView;
 
@@ -20,10 +22,11 @@ public class SquareView extends StackPane {
         this.piece = "";
         this.imageView = new ImageView();
 
-        var background = new Rectangle(tileSize, tileSize);
-        background.setFill((row + col) % 2 == 0 ? Color.CHOCOLATE : Color.BROWN);
+        backgroundSquare = new Rectangle(tileSize, tileSize);
+        initialColor = (row + col) % 2 == 0 ? Color.CHOCOLATE : Color.BROWN;
+        backgroundSquare.setFill(initialColor);
 
-        getChildren().addAll(background, imageView);
+        getChildren().addAll(backgroundSquare, imageView);
 
         setOnMouseClicked(event -> handleClick(parentView));
     }
@@ -60,4 +63,13 @@ public class SquareView extends StackPane {
             imageView.setImage(null);
         }
     }
+
+    public void highlightSquare() {
+        backgroundSquare.setFill(Color.DARKGRAY);
+    }
+
+    public void resetHighlightedSquare() {
+        backgroundSquare.setFill(initialColor);
+    }
+
 }

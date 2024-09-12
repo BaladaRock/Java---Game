@@ -89,4 +89,34 @@ public class ChessGameModel {
 
         return false;
     }
+
+    public List<Position> getAvailableMoves(ChessPiece pieceToMove, int startRow, int startCol) {
+        List<Position> validMoves = new ArrayList<>();
+
+        var availablePositions = _chessBoard.getAvailablePositions(pieceToMove, startRow, startCol);
+        for (Iterable<Position> direction : availablePositions) {
+            List<Position> validMovesInDirection = new ArrayList<>();
+            for (Position pos : direction) {
+                var square = _chessBoard.getSquare(pos.x(), pos.y());
+                var pieceOnSquare = square.get_piece();
+
+                if (pieceOnSquare != null && pieceOnSquare.getColor() == pieceToMove.getColor()) {
+                    break;
+                }
+
+                validMovesInDirection.add(pos);
+
+                if (pieceOnSquare != null && pieceOnSquare.getColor() != pieceToMove.getColor()) {
+                    break;
+                }
+            }
+            validMoves.addAll(validMovesInDirection);
+        }
+
+        return validMoves;
+    }
+
+    public ChessPiece getPiece(int row, int column) {
+        return _chessBoard.getSquare(row, column).get_piece();
+    }
 }

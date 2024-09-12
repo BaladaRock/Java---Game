@@ -2,7 +2,6 @@ package controller;
 
 import model.*;
 import view.ChessGameView;
-import view.SquareView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ public class ChessGameController {
     private final ChessGameModel _chessGameModel;
     private final ChessGameView _chessBoardView;
 
+    private Iterable<int[]> availableMoves;
     private boolean _moveWasPerformed = false;
 
     public ChessGameController(ChessGameModel chessGameModel, ChessGameView chessBoardView) {
@@ -21,8 +21,8 @@ public class ChessGameController {
 
     private void initialize() {
         _chessGameModel.initializeChessBoard();
-        List<PiecePlacement> initialPlacements = createInitialPiecePlacements();
-        _chessGameModel.setInitialPieces(initialPlacements);
+        availableMoves = new ArrayList<>();
+        _chessGameModel.setInitialPieces(createInitialPiecePlacements());
         _chessGameModel.initializePlayers();
     }
 
@@ -58,36 +58,57 @@ public class ChessGameController {
 
     public void handleSquareClick(int row, int column) {
         var square = _chessBoardView.getSquare(row, column);
-        var piece = square.getPiece();
 
         // Test the connection with the view via the click event
+        var piece = square.getPiece();
         System.out.println("Controller: Square clicked at: (" + row + ", " + column + ") with piece: " + piece);
 
+        // highlight possible moves logic
+        var currentPiece = _chessGameModel.getPiece(row, column);
+
+        if (currentPiece != null) {
+            availableMoves = initializePossibleMovesHighlight(currentPiece, row, column);
+        }
+
         var lastClicked = _chessGameModel.getPreviouslyClickedSquare();
-        if(lastClicked == null) {
+        if (lastClicked == null) {
             _chessGameModel.setPreviouslyClickedSquare(row, column);
-            return;
+        } else {
+
+            // Move piece logic
+            var pieceToMove = lastClicked.get_piece();
+            if (pieceToMove != null &&
+                    _chessGameModel.canApplyMove(pieceToMove, lastClicked.get_row(), lastClicked.get_col(), row, column)
+            ) {
+                _moveWasPerformed = true;
+                _chessGameModel.applyMove(pieceToMove, row, column);
+
+                initiateMoveEffect(_chessGameModel.getPreviouslyClickedSquare(), row, column);
+
+                _chessGameModel.emptyLastClickedSquare();
+                _chessBoardView.resetHighlightedSquares(availableMoves);
+
+            } else {
+                _chessGameModel.setPreviouslyClickedSquare(row, column);
+                _moveWasPerformed = false;
+            }
+
         }
 
-        var pieceToMove = lastClicked.get_piece();
+//        _chessBoardView.resetHighlightedSquares(availableMoves);
 
-        if (pieceToMove != null &&
-                _chessGameModel.canApplyMove(pieceToMove, lastClicked.get_row(), lastClicked.get_col(), row, column)
-        ){
-            _moveWasPerformed = true;
-            _chessGameModel.applyMove(pieceToMove, row, column);
+    }
 
-            initiateMoveEffect(_chessGameModel.getPreviouslyClickedSquare(), row, column);
+    private Iterable<int[]> initializePossibleMovesHighlight(ChessPiece piece, int row, int col) {
+        Iterable<Position> possibleMoves = _chessGameModel.getAvailableMoves(piece, row, col);
 
-            _chessGameModel.emptyLastClickedSquare();
-
+        List<int[]> moveCoordinates = new ArrayList<>();
+        for (Position move : possibleMoves) {
+            moveCoordinates.add(new int[]{move.x(), move.y()});
         }
+        _chessBoardView.highlightPossibleMoves(moveCoordinates);
 
-        else {
-            _chessGameModel.setPreviouslyClickedSquare(row, column);
-            _moveWasPerformed = false;
-        }
-
+        return  moveCoordinates;
     }
 
     private void initiateMoveEffect(ChessSquare lastClickedSquare, int row, int column) {
