@@ -5,6 +5,7 @@ import view.ChessGameView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ChessGameController {
     private final ChessGameModel _chessGameModel;
@@ -63,52 +64,72 @@ public class ChessGameController {
         var piece = square.getPiece();
         System.out.println("Controller: Square clicked at: (" + row + ", " + column + ") with piece: " + piece);
 
-        // highlight possible moves logic
-        var currentPiece = _chessGameModel.getPiece(row, column);
 
-        if (currentPiece != null) {
-            availableMoves = initializePossibleMovesHighlight(currentPiece, row, column);
-        }
+        /*to do: add a cleaner version - separate controller logic from chessgame model logic*/
+            Optional.ofNullable(availableMoves).ifPresent(_chessBoardView::resetHighlightedSquares);
 
-        var lastClicked = _chessGameModel.getPreviouslyClickedSquare();
-        if (lastClicked == null) {
-            _chessGameModel.setPreviouslyClickedSquare(row, column);
-        } else {
-
-            // Move piece logic
-            var pieceToMove = lastClicked.get_piece();
-            if (pieceToMove != null &&
-                    _chessGameModel.canApplyMove(pieceToMove, lastClicked.get_row(), lastClicked.get_col(), row, column)
-            ) {
+            var clickedPiece = _chessGameModel.getPiece(row, column);
+            if(_chessGameModel.checkIsMoveAndApplyMove(clickedPiece, row, column)) {
                 _moveWasPerformed = true;
-                _chessGameModel.applyMove(pieceToMove, row, column);
-
                 initiateMoveEffect(_chessGameModel.getPreviouslyClickedSquare(), row, column);
-
-                _chessGameModel.emptyLastClickedSquare();
-                _chessBoardView.resetHighlightedSquares(availableMoves);
-
-            } else {
-                _chessGameModel.setPreviouslyClickedSquare(row, column);
+            }
+            else if(clickedPiece != null){
                 _moveWasPerformed = false;
+                _chessGameModel.refreshActivePiece(clickedPiece, row, column);
+                initiatePossibleMovesHighlight(clickedPiece, row, column);
             }
 
-        }
 
-//        _chessBoardView.resetHighlightedSquares(availableMoves);
+
+        /*
+        old version:
+        */
+        // highlight possible moves logic
+//        var currentPiece = _chessGameModel.getPiece(row, column);
+//        if (currentPiece != null) {
+//            _chessGameModel.set_activePiece(currentPiece);
+//            initializePossibleMovesHighlight(currentPiece, row, column);
+//        }
+//
+//        var lastClicked = _chessGameModel.getPreviouslyClickedSquare();
+//        if (lastClicked == null) {
+//            _chessGameModel.setPreviouslyClickedSquare(row, column);
+//        } else {
+//
+//            // Move piece logic
+//            var pieceToMove = lastClicked.get_piece();
+//            if (pieceToMove != null && _chessGameModel.getAvailableMoves(pieceToMove, row, column) != null
+////                    _chessGameModel.canApplyMove(pieceToMove, lastClicked.get_row(), lastClicked.get_col(), row, column)
+//            ) {
+//                _moveWasPerformed = true;
+//                _chessGameModel.applyMove(pieceToMove, row, column);
+//
+//                initiateMoveEffect(_chessGameModel.getPreviouslyClickedSquare(), row, column);
+//
+//                _chessGameModel.emptyLastClickedSquare();
+//                if (availableMoves != null) {
+//                    _chessBoardView.resetHighlightedSquares(availableMoves);
+//                }
+//
+//            } else {
+//                _chessGameModel.setPreviouslyClickedSquare(row, column);
+//                _moveWasPerformed = false;
+//            }
+//
+//        }
+//
+////        _chessBoardView.resetHighlightedSquares(availableMoves);
 
     }
 
-    private Iterable<int[]> initializePossibleMovesHighlight(ChessPiece piece, int row, int col) {
-        Iterable<Position> possibleMoves = _chessGameModel.getAvailableMoves(piece, row, col);
-
-        List<int[]> moveCoordinates = new ArrayList<>();
-        for (Position move : possibleMoves) {
-            moveCoordinates.add(new int[]{move.x(), move.y()});
+    private void initiatePossibleMovesHighlight(ChessPiece piece, int row, int col) {
+        var possibleMoves = _chessGameModel.getAvailableMoves(piece, row, col);
+        if (possibleMoves == null) {
+            return;
         }
-        _chessBoardView.highlightPossibleMoves(moveCoordinates);
 
-        return  moveCoordinates;
+        _chessBoardView.highlightPossibleMoves(possibleMoves);
+        this.availableMoves = possibleMoves;
     }
 
     private void initiateMoveEffect(ChessSquare lastClickedSquare, int row, int column) {

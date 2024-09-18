@@ -33,25 +33,25 @@ public class ChessGameView extends GridPane {
 
     private String getInitialPiece(int row, int col) {
         if (row == 1) {
-            return "white_pawn";
-        } else if (row == 6) {
             return "black_pawn";
+        } else if (row == 6) {
+            return "white_pawn";
         } else if (row == 0) {
-            return switch (col) {
-                case 0, 7 -> "white_rook";
-                case 1, 6 -> "white_knight";
-                case 2, 5 -> "white_bishop";
-                case 3 -> "white_queen";
-                case 4 -> "white_king";
-                default -> "";
-            };
-        } else if (row == 7) {
             return switch (col) {
                 case 0, 7 -> "black_rook";
                 case 1, 6 -> "black_knight";
                 case 2, 5 -> "black_bishop";
                 case 3 -> "black_queen";
                 case 4 -> "black_king";
+                default -> "";
+            };
+        } else if (row == 7) {
+            return switch (col) {
+                case 0, 7 -> "white_rook";
+                case 1, 6 -> "white_knight";
+                case 2, 5 -> "white_bishop";
+                case 3 -> "white_queen";
+                case 4 -> "white_king";
                 default -> "";
             };
         }
