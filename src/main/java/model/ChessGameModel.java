@@ -40,8 +40,7 @@ public class ChessGameModel {
         return this._lastClickedSquare;
     }
 
-    public void setPreviouslyClickedSquare(int row, int column)
-    {
+    public void setPreviouslyClickedSquare(int row, int column) {
         _lastClickedSquare = _chessBoard.getSquare(row, column);
     }
 
@@ -55,6 +54,7 @@ public class ChessGameModel {
                 _lastClickedSquare.get_row(),
                 _lastClickedSquare.get_col()
         ), null);
+        System.out.println("Model: Applied move at: (" + row + ", " + column + ") with piece: " + pieceToMove.getName());
     }
 
     public boolean canApplyMove(
@@ -64,6 +64,10 @@ public class ChessGameModel {
             int targetRow,
             int targetCol
     ) {
+        if (pieceToMove == null) {
+            return false;
+        }
+
         var availablePositions = _chessBoard.getAvailablePositions(pieceToMove, startRow, startCol);
         for (Iterable<Position> direction : availablePositions) {
             List<Position> validMovesInDirection = new ArrayList<>();
@@ -107,7 +111,7 @@ public class ChessGameModel {
                     break;
                 }
 
-                validMoves.add(new int[] {pos.x(), pos.y()});
+                validMoves.add(new int[]{pos.x(), pos.y()});
 
                 if (pieceOnSquare != null && pieceOnSquare.getColor() != pieceToMove.getColor()) {
                     break;
@@ -122,24 +126,25 @@ public class ChessGameModel {
         return _chessBoard.getSquare(row, column).get_piece();
     }
 
-    public void refreshActivePiece(ChessPiece currentPiece, int row, int column) {
+    public void updateBoardState(ChessPiece currentPiece, int row, int column) {
         _activePiece = currentPiece;
         _lastClickedSquare = _chessBoard.getSquare(row, column);
     }
 
-    public boolean checkIsMoveAndApplyMove(ChessPiece clickedPiece, int row, int column) {
-        var moveApplied = _activePiece != null &&
-                canApplyMove(clickedPiece,
+    public boolean checkIsMoveAndApplyMove(int row, int column) {
+        var moveIsPossible = _activePiece != null &&
+                canApplyMove(_activePiece,
                         _lastClickedSquare.get_row(),
                         _lastClickedSquare.get_col(),
                         row,
                         column
                 );
 
-        if(moveApplied)
-            _activePiece = null;
+        if (moveIsPossible) {
+            applyMove(_activePiece, row, column);
+        }
 
-        return moveApplied;
+        return moveIsPossible;
     }
 
     public ChessPiece get_activePiece() {

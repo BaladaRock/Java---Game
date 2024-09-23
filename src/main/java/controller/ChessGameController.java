@@ -58,68 +58,26 @@ public class ChessGameController {
     }
 
     public void handleSquareClick(int row, int column) {
+        // Test the connection with the view via click event
         var square = _chessBoardView.getSquare(row, column);
-
-        // Test the connection with the view via the click event
         var piece = square.getPiece();
         System.out.println("Controller: Square clicked at: (" + row + ", " + column + ") with piece: " + piece);
 
+        Optional.ofNullable(availableMoves).ifPresent(_chessBoardView::resetHighlightedSquares);
+        _moveWasPerformed = false;
 
-        /*to do: add a cleaner version - separate controller logic from chessgame model logic*/
-            Optional.ofNullable(availableMoves).ifPresent(_chessBoardView::resetHighlightedSquares);
+        ChessPiece newActivePiece = null;
+        var clickedPiece = _chessGameModel.getPiece(row, column);
 
-            var clickedPiece = _chessGameModel.getPiece(row, column);
-            if(_chessGameModel.checkIsMoveAndApplyMove(clickedPiece, row, column)) {
-                _moveWasPerformed = true;
-                initiateMoveEffect(_chessGameModel.getPreviouslyClickedSquare(), row, column);
-            }
-            else if(clickedPiece != null){
-                _moveWasPerformed = false;
-                _chessGameModel.refreshActivePiece(clickedPiece, row, column);
-                initiatePossibleMovesHighlight(clickedPiece, row, column);
-            }
+        if (_chessGameModel.checkIsMoveAndApplyMove(row, column)) {
+            _moveWasPerformed = true;
+            initiateMoveEffect(_chessGameModel.getPreviouslyClickedSquare(), row, column);
+        } else if (clickedPiece != null && _chessGameModel.get_activePiece() == null) {
+            newActivePiece = clickedPiece;
+            initiatePossibleMovesHighlight(clickedPiece, row, column);
+        }
 
-
-
-        /*
-        old version:
-        */
-        // highlight possible moves logic
-//        var currentPiece = _chessGameModel.getPiece(row, column);
-//        if (currentPiece != null) {
-//            _chessGameModel.set_activePiece(currentPiece);
-//            initializePossibleMovesHighlight(currentPiece, row, column);
-//        }
-//
-//        var lastClicked = _chessGameModel.getPreviouslyClickedSquare();
-//        if (lastClicked == null) {
-//            _chessGameModel.setPreviouslyClickedSquare(row, column);
-//        } else {
-//
-//            // Move piece logic
-//            var pieceToMove = lastClicked.get_piece();
-//            if (pieceToMove != null && _chessGameModel.getAvailableMoves(pieceToMove, row, column) != null
-////                    _chessGameModel.canApplyMove(pieceToMove, lastClicked.get_row(), lastClicked.get_col(), row, column)
-//            ) {
-//                _moveWasPerformed = true;
-//                _chessGameModel.applyMove(pieceToMove, row, column);
-//
-//                initiateMoveEffect(_chessGameModel.getPreviouslyClickedSquare(), row, column);
-//
-//                _chessGameModel.emptyLastClickedSquare();
-//                if (availableMoves != null) {
-//                    _chessBoardView.resetHighlightedSquares(availableMoves);
-//                }
-//
-//            } else {
-//                _chessGameModel.setPreviouslyClickedSquare(row, column);
-//                _moveWasPerformed = false;
-//            }
-//
-//        }
-//
-////        _chessBoardView.resetHighlightedSquares(availableMoves);
-
+        _chessGameModel.updateBoardState(newActivePiece, row, column);
     }
 
     private void initiatePossibleMovesHighlight(ChessPiece piece, int row, int col) {
