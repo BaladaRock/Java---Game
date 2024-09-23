@@ -65,19 +65,23 @@ public class ChessGameController {
 
         Optional.ofNullable(availableMoves).ifPresent(_chessBoardView::resetHighlightedSquares);
         _moveWasPerformed = false;
-
-        ChessPiece newActivePiece = null;
-        var clickedPiece = _chessGameModel.getPiece(row, column);
-
         if (_chessGameModel.checkIsMoveAndApplyMove(row, column)) {
             _moveWasPerformed = true;
             initiateMoveEffect(_chessGameModel.getPreviouslyClickedSquare(), row, column);
-        } else if (clickedPiece != null && _chessGameModel.get_activePiece() == null) {
-            newActivePiece = clickedPiece;
-            initiatePossibleMovesHighlight(clickedPiece, row, column);
+            _chessGameModel.updateBoardState(null, row, column);
+        } else {
+            handlePieceSelection(row, column);
         }
+    }
 
-        _chessGameModel.updateBoardState(newActivePiece, row, column);
+    private void handlePieceSelection(int row, int column) {
+        var clickedPiece = _chessGameModel.getPiece(row, column);
+        if (clickedPiece != null && _chessGameModel.get_activePiece() == null) {
+            initiatePossibleMovesHighlight(clickedPiece, row, column);
+            _chessGameModel.updateBoardState(clickedPiece, row, column);
+        } else {
+            _chessGameModel.updateBoardState(null, row, column);
+        }
     }
 
     private void initiatePossibleMovesHighlight(ChessPiece piece, int row, int col) {
