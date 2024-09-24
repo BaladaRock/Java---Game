@@ -16,6 +16,12 @@ public class SquareView extends StackPane {
     private String piece;
     private final ImageView imageView;
 
+    private double initialMouseX;
+    private double initialMouseY;
+    private double initialPieceX;
+    private double initialPieceY;
+    private boolean draggingPiece = false;
+
     public SquareView(int row, int col, int tileSize, ChessGameView parentView) {
         this.row = row;
         this.col = col;
@@ -28,7 +34,45 @@ public class SquareView extends StackPane {
 
         getChildren().addAll(backgroundSquare, imageView);
 
+        setOnMousePressed(event -> startDrag(event.getSceneX(), event.getSceneY()));
+        setOnMouseDragged(event -> onDrag(event.getSceneX(), event.getSceneY()));
+        setOnMouseReleased(event -> finishDrag());
+
         setOnMouseClicked(event -> handleClick(parentView));
+    }
+
+    private void startDrag(double mouseX, double mouseY) {
+        if (piece != null) {
+            initialMouseX = mouseX;
+            initialMouseY = mouseY;
+            initialPieceX = imageView.getTranslateX();
+            initialPieceY = imageView.getTranslateY();
+            draggingPiece = true;
+
+            this.toFront();
+        }
+    }
+
+
+    private void onDrag(double mouseX, double mouseY) {
+        if (draggingPiece && !piece.isEmpty()) {
+            double deltaX = mouseX - initialMouseX;
+            double deltaY = mouseY - initialMouseY;
+
+            imageView.setTranslateX(initialPieceX + deltaX);
+            imageView.setTranslateY(initialPieceY + deltaY);
+        }
+    }
+
+    private void finishDrag() {
+        if (draggingPiece && !piece.isEmpty()) {
+            draggingPiece = false;
+            // Get to initial position
+            // To do: Add the move behaviour for drag and drop
+            imageView.setTranslateX(0);
+            imageView.setTranslateY(0);
+
+        }
     }
 
     public int getRow() {
@@ -71,5 +115,4 @@ public class SquareView extends StackPane {
     public void resetHighlightedSquare() {
         backgroundSquare.setFill(initialColor);
     }
-
 }
