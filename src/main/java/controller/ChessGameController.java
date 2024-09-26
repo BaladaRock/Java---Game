@@ -58,7 +58,7 @@ public class ChessGameController {
     }
 
     public void handleSquareClick(int row, int column) {
-        // Test the connection with the view via click event
+        // Test the connection with the view via the click event
         var square = _chessBoardView.getSquare(row, column);
         var piece = square.getPiece();
         System.out.println("Controller: Square clicked at: (" + row + ", " + column + ") with piece: " + piece);

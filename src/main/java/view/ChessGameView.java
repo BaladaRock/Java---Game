@@ -63,13 +63,14 @@ public class ChessGameView extends GridPane {
     }
 
     public void handleSquareClick(SquareView square) {
-        if (controller != null) {
-            controller.handleSquareClick(square.getRow(), square.getCol());
-
-            // Test the connection with the controller via the click event
-            System.out.println("View: Square clicked at: (" + square.getRow() + ", " + square.getCol()
-                    + ") with piece: " + square.getPiece());
+        if (controller == null) {
+            return;
         }
+        controller.handleSquareClick(square.getRow(), square.getCol());
+
+        // Test the connection with the controller via the click event
+        System.out.println("View: Square clicked at: (" + square.getRow() + ", " + square.getCol()
+                + ") with piece: " + square.getPiece());
     }
 
     public SquareView getSquare(int row, int col) {
@@ -104,7 +105,17 @@ public class ChessGameView extends GridPane {
         }
     }
 
-    public double getViewSize() {
-        return SIZE * TILE_SIZE;
+    public void handlePieceDrop(SquareView startSquare, double mouseX, double mouseY) {
+        int targetRow = (int)Math.round(mouseY / TILE_SIZE);
+        int targetCol = (int)Math.round(mouseX / TILE_SIZE);
+        if (targetRow < 0 || targetRow >= SIZE || targetCol < 0 || targetCol >= SIZE) {
+            return;
+        }
+
+        SquareView targetSquare = getSquare(targetRow, targetCol);
+        handleSquareClick(targetSquare);
+
+        System.out.println("Moved piece from (" + startSquare.getRow() + ", " + startSquare.getCol() + ") "
+                + "to (" + targetRow + ", " + targetCol + ")");
     }
 }

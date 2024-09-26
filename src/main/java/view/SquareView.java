@@ -22,11 +22,13 @@ public class SquareView extends StackPane {
     private double initialPieceX;
     private double initialPieceY;
     private boolean draggingPiece = false;
+    private final int tileSize;
 
     public SquareView(int row, int col, int tileSize, ChessGameView parentView) {
         this.row = row;
         this.col = col;
         this.piece = "";
+        this.tileSize = tileSize;
         this.imageView = new ImageView();
         this.parentView = parentView;
 
@@ -55,6 +57,7 @@ public class SquareView extends StackPane {
         draggingPiece = true;
 
         this.toFront();
+        handleClick(parentView);
     }
 
 
@@ -65,8 +68,6 @@ public class SquareView extends StackPane {
 
         double translatedXPosition = initialPieceX + mouseX - initialMouseX;
         double translatedYPosition = initialPieceY + mouseY - initialMouseY;
-        double tileSize = backgroundSquare.getWidth();
-
         imageView.setTranslateX(calculateTranslatedPosition(tileSize, translatedXPosition, col));
         imageView.setTranslateY(calculateTranslatedPosition(tileSize, translatedYPosition, row));
     }
@@ -79,14 +80,21 @@ public class SquareView extends StackPane {
     }
 
     private void finishDrag() {
-        if (draggingPiece && !piece.isEmpty()) {
-            draggingPiece = false;
-            // Get to initial position
-            // To do: Add the move behaviour for drag and drop
-            imageView.setTranslateX(0);
-            imageView.setTranslateY(0);
-
+        if (!draggingPiece || piece.isEmpty()) {
+            return;
         }
+
+        draggingPiece = false;
+        // Calculate the mouse coordinates relative to the chess board
+        double translatedX = col * tileSize + imageView.getTranslateX();
+        double translatedY = row * tileSize + imageView.getTranslateY();
+
+        parentView.handlePieceDrop(this, translatedX, translatedY);
+
+        // Get piece to its initial position
+        imageView.setTranslateX(0);
+        imageView.setTranslateY(0);
+
     }
 
     public int getRow() {
