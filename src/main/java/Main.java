@@ -15,7 +15,7 @@ public class Main extends Application {
 
         chessGameView.setController(gameController);
 
-        Scene scene = new Scene(chessGameView, 500, 500);
+        Scene scene = new Scene(chessGameView, 660, 660);
         primaryStage.setTitle("Chess Game");
         primaryStage.setScene(scene);
         primaryStage.show();

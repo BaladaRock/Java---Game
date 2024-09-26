@@ -13,6 +13,7 @@ public class SquareView extends StackPane {
     private final int col;
     private final Rectangle backgroundSquare;
     private final Color initialColor;
+    private final ChessGameView parentView;
     private String piece;
     private final ImageView imageView;
 
@@ -27,6 +28,7 @@ public class SquareView extends StackPane {
         this.col = col;
         this.piece = "";
         this.imageView = new ImageView();
+        this.parentView = parentView;
 
         backgroundSquare = new Rectangle(tileSize, tileSize);
         initialColor = (row + col) % 2 == 0 ? Color.CHOCOLATE : Color.BROWN;
@@ -42,26 +44,38 @@ public class SquareView extends StackPane {
     }
 
     private void startDrag(double mouseX, double mouseY) {
-        if (piece != null) {
-            initialMouseX = mouseX;
-            initialMouseY = mouseY;
-            initialPieceX = imageView.getTranslateX();
-            initialPieceY = imageView.getTranslateY();
-            draggingPiece = true;
-
-            this.toFront();
+        if (piece == null) {
+            return;
         }
+
+        initialMouseX = mouseX;
+        initialMouseY = mouseY;
+        initialPieceX = imageView.getTranslateX();
+        initialPieceY = imageView.getTranslateY();
+        draggingPiece = true;
+
+        this.toFront();
     }
 
 
     private void onDrag(double mouseX, double mouseY) {
-        if (draggingPiece && !piece.isEmpty()) {
-            double deltaX = mouseX - initialMouseX;
-            double deltaY = mouseY - initialMouseY;
-
-            imageView.setTranslateX(initialPieceX + deltaX);
-            imageView.setTranslateY(initialPieceY + deltaY);
+        if (!draggingPiece || piece.isEmpty()) {
+            return;
         }
+
+        double translatedXPosition = initialPieceX + mouseX - initialMouseX;
+        double translatedYPosition = initialPieceY + mouseY - initialMouseY;
+        double tileSize = backgroundSquare.getWidth();
+
+        imageView.setTranslateX(calculateTranslatedPosition(tileSize, translatedXPosition, col));
+        imageView.setTranslateY(calculateTranslatedPosition(tileSize, translatedYPosition, row));
+    }
+
+    private double calculateTranslatedPosition(double tileSize, double translatedPosition, int coordinate) {
+        double minCoordinate = -coordinate * tileSize;
+        double maxCoordinate = (parentView.getBoardSize() - 1 - coordinate) * tileSize;
+
+        return Math.max(minCoordinate, Math.min(translatedPosition, maxCoordinate));
     }
 
     private void finishDrag() {
@@ -101,8 +115,6 @@ public class SquareView extends StackPane {
             String imagePath = "/chess_images/" + piece + ".png";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             imageView.setImage(image);
-            imageView.setFitWidth(getWidth());
-            imageView.setFitHeight(getHeight());
         } else {
             imageView.setImage(null);
         }

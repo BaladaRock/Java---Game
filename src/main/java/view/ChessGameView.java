@@ -6,13 +6,14 @@ import javafx.scene.layout.GridPane;
 
 public class ChessGameView extends GridPane {
     private final int SIZE;
+    private final int TILE_SIZE = 75;
     private final SquareView[][] squares;
     private ChessGameController controller;
 
     public ChessGameView(int boardSize) {
         SIZE = boardSize;
         squares = new SquareView[SIZE][SIZE];
-        setPadding(new Insets(10));
+        setPadding(new Insets(30));
         setHgap(0);
         setVgap(0);
 
@@ -22,7 +23,6 @@ public class ChessGameView extends GridPane {
     private void drawBoard() {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
-                int TILE_SIZE = 60;
                 SquareView square = new SquareView(row, col, TILE_SIZE, this);
                 square.setPiece(getInitialPiece(row, col));
                 squares[row][col] = square;
@@ -102,5 +102,9 @@ public class ChessGameView extends GridPane {
 
             squares[row][col].resetHighlightedSquare();
         }
+    }
+
+    public double getViewSize() {
+        return SIZE * TILE_SIZE;
     }
 }
