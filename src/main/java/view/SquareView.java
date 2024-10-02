@@ -41,31 +41,21 @@ public class SquareView extends StackPane {
         setOnMousePressed(event -> startDrag(event.getSceneX(), event.getSceneY()));
         setOnMouseDragged(event -> onDrag(event.getSceneX(), event.getSceneY()));
         setOnMouseReleased(event -> finishDrag());
-
-        setOnMouseClicked(event -> handleClick(parentView));
     }
 
     private void startDrag(double mouseX, double mouseY) {
-        if (piece == null) {
-            return;
-        }
-
         initialMouseX = mouseX;
         initialMouseY = mouseY;
         initialPieceX = imageView.getTranslateX();
         initialPieceY = imageView.getTranslateY();
-        draggingPiece = true;
 
         this.toFront();
-        handleClick(parentView);
+        handleClick();
     }
 
 
     private void onDrag(double mouseX, double mouseY) {
-        if (!draggingPiece || piece.isEmpty()) {
-            return;
-        }
-
+        draggingPiece = true;
         double translatedXPosition = initialPieceX + mouseX - initialMouseX;
         double translatedYPosition = initialPieceY + mouseY - initialMouseY;
         imageView.setTranslateX(calculateTranslatedPosition(tileSize, translatedXPosition, col));
@@ -80,16 +70,14 @@ public class SquareView extends StackPane {
     }
 
     private void finishDrag() {
-        if (!draggingPiece || piece.isEmpty()) {
-            return;
-        }
-
-        draggingPiece = false;
         // Calculate the mouse coordinates relative to the chess board
         double translatedX = col * tileSize + imageView.getTranslateX();
         double translatedY = row * tileSize + imageView.getTranslateY();
 
-        parentView.handlePieceDrop(this, translatedX, translatedY);
+        if (draggingPiece) {
+            parentView.handlePieceDrop(this, translatedX, translatedY);
+        }
+        draggingPiece = false;
 
         // Get piece to its initial position
         imageView.setTranslateX(0);
@@ -114,7 +102,7 @@ public class SquareView extends StackPane {
         updatePieceImage();
     }
 
-    private void handleClick(ChessGameView parentView) {
+    private void handleClick() {
         parentView.handleSquareClick(this);
     }
 

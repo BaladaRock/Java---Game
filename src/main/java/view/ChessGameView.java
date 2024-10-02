@@ -9,6 +9,7 @@ public class ChessGameView extends GridPane {
     private final int TILE_SIZE = 75;
     private final SquareView[][] squares;
     private ChessGameController controller;
+    private Iterable<int[]> highlightedSquares;
 
     public ChessGameView(int boardSize) {
         SIZE = boardSize;
@@ -94,6 +95,8 @@ public class ChessGameView extends GridPane {
 
             squares[row][col].highlightSquare();
         }
+
+        highlightedSquares = possibleMovesCoordinates;
     }
 
     public void resetHighlightedSquares(Iterable<int[]> availableMoves) {
@@ -103,6 +106,8 @@ public class ChessGameView extends GridPane {
 
             squares[row][col].resetHighlightedSquare();
         }
+        
+        highlightedSquares = null;
     }
 
     public void handlePieceDrop(SquareView startSquare, double mouseX, double mouseY) {
